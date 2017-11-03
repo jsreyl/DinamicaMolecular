@@ -1,0 +1,12 @@
+
+[]Definir estructura de partículas.
+[]Condiciones iniciales.
+[]Fuerza teniendo en cuenta barreras físicas (i.e. cuando la partícula toca el piso no pasa derecho.)
+[]Vecinos.
+[]Optimizar para que solo calcule interacciones con partículas vecinas (en una malla.)
+[]Mover las partículas.(t -> t + dt -> integrantes.)
+[]Imprimir datos.(Imprimir cada ciertos pasos para no llenar la memoria.)
+
+[]Ponerle disipación al sitema (-bv^2) para encontrar coeficiente de disipación.
+
+[]Implementarlo con parículas duras en lugar de suaves para que no haya tiempo de colisión.
