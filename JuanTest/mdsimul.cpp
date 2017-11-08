@@ -36,10 +36,14 @@ void initial_conditions(std::vector<Particle> & balls)
   }
 
   // initial velocity could be random, for now everything going up
-  for(auto & body : balls){
+  balls[0].Vy = +1.2347;
+  balls[0].Vx = -1.5;
+  balls[1].Vy = +1.2347;
+  balls[1].Vx = +1.5;
+  /*  for(auto & body : balls){
     body.Vy = +1.2347;
     body.Vx = -1.5;
-  }
+    }*/
 }
 void compute_force(std::vector<Particle> & balls)
 {
@@ -70,6 +74,15 @@ void compute_force(std::vector<Particle> & balls)
     }
     
     // force with other particles? other walls?
+    double relx = balls[0].Rx - balls[1].Rx;
+    double rely = balls[0].Ry - balls[1].Ry;
+    double collision_rad = std::sqrt(relx*relx+rely*rely);
+    double delta01 = balls[0].rad + balls[1].rad - collision_rad;
+    if (delta01 > 0){
+      balls[0].Fx += K*delta01*(relx/collision_rad);
+      balls[0].Fy += K*delta01*(rely/collision_rad);
+      balls[1].Fx -= K*delta01*(relx/collision_rad);
+      balls[1].Fy -= K*delta01*(rely/collision_rad);    }
   }
 }
 
@@ -108,6 +121,12 @@ void print_info(const std::vector<Particle> & balls, const double & time)
             << "\t" << balls[0].Rz 
             << "\t" << balls[0].Vx 
             << "\t" << balls[0].Vy 
-            << "\t" << balls[0].Vz 
+            << "\t" << balls[0].Vz
+	    << "\t" << balls[1].Rx
+            << "\t" << balls[1].Ry 
+            << "\t" << balls[1].Rz 
+            << "\t" << balls[1].Vx 
+            << "\t" << balls[1].Vy 
+            << "\t" << balls[1].Vz 
             << "\n";
 }

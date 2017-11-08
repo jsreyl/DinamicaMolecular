@@ -9,7 +9,7 @@ const double RHO=21.4; // kg/m^3
 const double K=1230.45; // kg/m, lastic constant
 const double L=3.45; // m, domain lenght
 const double RAD=0.2*L; // m, radius for example particle
-const int N=1; // Number of particles
+const int N=2; // Number of particles
 const int NSTEPS=1000; // Number of time steps
 const double DT=0.01;
 

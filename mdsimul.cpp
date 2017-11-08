@@ -40,6 +40,7 @@ void initial_conditions(std::vector<Particle> & balls)
     body.Vy = +1.2347;
   }
 }
+
 void compute_force(std::vector<Particle> & balls)
 {
   for(auto & body : balls){
@@ -49,14 +50,48 @@ void compute_force(std::vector<Particle> & balls)
     // add gravitational force
     body.Fy += body.mass*G; // G is already negative
 
-    // add force with bottom wall
-    double delta = body.rad - body.Ry;
-    if (delta > 0) {
-      //      body.Fy += K*delta;
-      body.Fy += K*delta -10.1*body.Vy; //using dispersion
+    // add force with walls
+    double deltayb = body.rad - body.Ry; //bottom
+    double deltayt = body.rad + body.Ry- L; //top
+    double deltaxl = body.rad -body.Rx; // left
+    double deltaxr = body.rad +body.Rx-L; //right
+    if (deltayb > 0) {
+      body.Fy += K*deltayb;
+      //body.Fy += K*deltayb -10.1*body.Vy; //using dispersion
     }
-    
-    // force with other particles? other walls?
+    if (deltayt > 0) {
+      body.Fy -= K*deltayt;
+    }    
+    if (deltaxl > 0) {
+      body.Fx += K*deltaxl;
+    }
+    if (deltaxr > 0) {
+      body.Fx -= K*deltaxr;
+    }
+  }
+
+  //force with other particles.
+  for(int id = 0; id < balls.size(); ++id){
+    for(int jd = id+1; jd < balls.size(); ++jd){
+      double Rij[3], Nij[3];
+      Rij[0] = balls[jd].Rx - balls[id].Rx;
+      Rij[1] = balls[jd].Ry - balls[id].Ry;
+      Rij[2] = balls[jd].Rz - balls[id].Rz;
+      double rij = std::sqrt(Rij[0]*Rij[0]+Rij[1]*Rij[1]+Rij[2]*Rij[2]);
+      Nij[0]=Rij[0]/rij;
+      Nij[1]=Rij[1]/rij;
+      Nij[2]=Rij[2]/rij;
+      double delta = balls[id].rad + balls[jd].rad - rij;
+      if (delta > 0){
+	balls[jd].Fx += K*delta*Nij[0];
+	balls[jd].Fy += K*delta*Nij[1];
+	balls[jd].Fz += K*delta*Nij[2];
+	balls[id].Fx -= K*delta*Nij[0];
+	balls[id].Fy -= K*delta*Nij[1];
+	balls[id].Fz -= K*delta*Nij[2];
+      }
+    }
+
   }
 }
 
@@ -93,6 +128,13 @@ void print_info(const std::vector<Particle> & balls, const double & time)
             << "\t" << balls[0].Rz 
             << "\t" << balls[0].Vx 
             << "\t" << balls[0].Vy 
-            << "\t" << balls[0].Vz 
+            << "\t" << balls[0].Vz
+	    << "\t" << balls[1].Rx
+            << "\t" << balls[1].Ry 
+            << "\t" << balls[1].Rz 
+            << "\t" << balls[1].Vx 
+            << "\t" << balls[1].Vy 
+            << "\t" << balls[1].Vz 
+
             << "\n";
 }
